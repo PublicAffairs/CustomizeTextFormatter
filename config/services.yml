@@ -1,0 +1,7 @@
+services:
+    johnd0e.customizetf.listener:
+        class: johnd0e\customizetf\event\main_listener
+        arguments:
+            - '@language'
+        tags:
+            - { name: event.listener }
