@@ -23,6 +23,7 @@ class main_listener implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return array(
+			'core.text_formatter_s9e_configure_after'	=> array('configure_tf',-100), // lowest priority to execute afher all others
 		);
 	}
 
@@ -37,5 +38,23 @@ class main_listener implements EventSubscriberInterface
 	public function __construct(\phpbb\language\language $language)
 	{
 		$this->language = $language;
+	}
+
+	/**
+	 * Configure TextFormatter to fit some specific purpose.
+	 *
+	 * @event  text_formatter_s9e_configure_after
+	 * @param  \phpbb\event\data	$event		The event object
+	 * @return void
+	 * @access public
+	 */
+	public function configure_tf($event)
+	{
+		$configurator = $event['configurator'];
+
+		// this rule generator is enabled by Litedown plugin
+		// phpBB itselfs does not use paragraphs in content (instead it uses <br>)
+		// so we remove it in order to avoid style issues.
+		$configurator->rulesGenerator->remove('ManageParagraphs');
 	}
 }
